@@ -8,8 +8,6 @@ on:
   push:
     branches:
       - master
-  pull_request:
-    branches: [ "master" ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -29,6 +27,16 @@ jobs:
       # Runs a single command using the runners shell
       - name: Run a one-line script
         run: echo Hello, world!
+      - name: Install CLI
+        run: |
+           curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
+
+      - name: Validate Asset Bundle on DEV
+        run: databricks bundle validate -t dev
+
+      - name: Deploy Asset Bundle on DEV
+        run: databricks bundle deploy -t dev
+        working-directory: databrick_lakehouse
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
