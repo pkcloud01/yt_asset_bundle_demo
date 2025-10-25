@@ -34,7 +34,7 @@ jobs:
 
       - name: Install Databricks CLI (latest binary)
         run: |
-          curl -fsSL https://raw.githubusercontent.com/databricks/cli/main/install.sh | bash
+          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | bash
           databricks version
 
       - name: Authenticate Databricks
