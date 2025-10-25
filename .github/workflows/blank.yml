@@ -27,9 +27,15 @@ jobs:
       # Runs a single command using the runners shell
       - name: Run a one-line script
         run: echo Hello, world!
-      - name: Install Databricks CLI v2
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install latest Databricks CLI v2
         run: |
-          pip install --upgrade databricks
+          pip install --upgrade pip
+          pip install --upgrade databricks-cli -i https://pypi.databricks.com
           databricks version
 
       - name: Authenticate Databricks (v2)
@@ -40,14 +46,11 @@ jobs:
           databricks auth profiles set --profile ci --host "$DATABRICKS_HOST" --token "$DATABRICKS_TOKEN"
           databricks auth switch --profile ci
           databricks auth whoami
-          
-      - name: Validate Asset Bundle on DEV
-        run: databricks bundle validate -t dev
-        working-directory: yt_asset_bundle_demo_project
 
-      - name: Deploy Asset Bundle on DEV
-        run: databricks bundle deploy -t dev
-        working-directory: yt_asset_bundle_demo_project
+      - name: Validate and Deploy Bundle
+        run: |
+          databricks bundle validate -t dev --profile ci
+          databricks bundle deploy -t dev --profile ci
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
