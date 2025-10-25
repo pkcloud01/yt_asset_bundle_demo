@@ -35,8 +35,10 @@ jobs:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
         run: |
-          mkdir -p ~/.databricks
-          databricks auth profiles set --profile ci --host "$DATABRICKS_HOST" --token "$DATABRICKS_TOKEN"
+          databricks auth login --type pat \
+            --host "$DATABRICKS_HOST" \
+            --token "$DATABRICKS_TOKEN" \
+            --profile ci
           databricks auth switch --profile ci
       - name: Validate Asset Bundle on DEV
         run: databricks bundle validate -t dev
