@@ -37,7 +37,8 @@ jobs:
           pip install --upgrade pip
           pip install --upgrade databricks-cli -i https://pypi.databricks.com
           databricks version
-
+      - run: pip install flake8
+      - run: flake8 --max-line-length=100 yt_asset_bundle_demo_project/src
       - name: Authenticate Databricks (v2)
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
