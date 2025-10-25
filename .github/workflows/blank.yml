@@ -27,21 +27,16 @@ jobs:
       # Runs a single command using the runners shell
       - name: Run a one-line script
         run: echo Hello, world!
-      - name: Install CLI
+      - name: Install Databricks CLI v2
         run: |
-           curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
-
-      - name: Install latest Databricks CLI
-        run: |
-          pip install --upgrade "databricks-cli>=0.228.0"
+          pip install --upgrade databricks
           databricks version
 
-      - name: Authenticate Databricks (modern CLI)
+      - name: Authenticate Databricks (v2)
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
         run: |
-          echo "Creating Databricks auth profile..."
           databricks auth profiles set --profile ci --host "$DATABRICKS_HOST" --token "$DATABRICKS_TOKEN"
           databricks auth switch --profile ci
           databricks auth whoami
