@@ -31,16 +31,21 @@ jobs:
         run: |
            curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
 
-      - name: Authenticate Databricks (modern auth)
+      - name: Install latest Databricks CLI
+        run: |
+          pip install --upgrade "databricks-cli>=0.228.0"
+          databricks version
+
+      - name: Authenticate Databricks (modern CLI)
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
         run: |
-          databricks auth login \
-            --host "$DATABRICKS_HOST" \
-            --token "$DATABRICKS_TOKEN" \
-            --profile ci
+          echo "Creating Databricks auth profile..."
+          databricks auth profiles set --profile ci --host "$DATABRICKS_HOST" --token "$DATABRICKS_TOKEN"
           databricks auth switch --profile ci
+          databricks auth whoami
+          
       - name: Validate Asset Bundle on DEV
         run: databricks bundle validate -t dev
         working-directory: yt_asset_bundle_demo_project
