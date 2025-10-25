@@ -32,10 +32,9 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install Databricks CLI (from databricks-sdk)
+      - name: Install Databricks CLI (latest binary)
         run: |
-          pip install --upgrade pip
-          pip install --upgrade databricks-sdk
+          curl -fsSL https://raw.githubusercontent.com/databricks/cli/main/install.sh | bash
           databricks version
 
       - name: Authenticate Databricks
@@ -46,6 +45,12 @@ jobs:
           databricks auth profiles set --profile ci --host "$DATABRICKS_HOST" --token "$DATABRICKS_TOKEN"
           databricks auth switch --profile ci
           databricks auth whoami
+
+      - name: Validate and Deploy Bundle
+        run: |
+          databricks bundle validate -t dev --profile ci
+          databricks bundle deploy -t dev --profile ci
+          
       # - run: pip install flake8
       # - run: flake8 --max-line-length=100 yt_asset_bundle_demo_project/src
       # - name: Authenticate Databricks (v2)
