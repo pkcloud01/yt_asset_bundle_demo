@@ -1,0 +1,29 @@
+resources:
+  jobs:
+    job_yt_asset_bundle_demo_project_job:
+      name: job_yt_asset_bundle_demo_project_job
+      email_notifications:
+        on_start:
+          - pkcloudacademy@gmail.com
+        on_success:
+          - pkcloudacademy@gmail.com
+        on_failure:
+          - pkcloudacademy@gmail.com
+        no_alert_for_skipped_runs: true
+      trigger:
+        pause_status: UNPAUSED
+        periodic:
+          interval: 1
+          unit: DAYS
+      tasks:
+        - task_key: pipeline-task-dlt_pipeline_demo
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.dlt_pipeline_demo.id}
+            full_refresh: false
+        - task_key: DQ_Check
+          depends_on:
+            - task_key: pipeline-task-dlt_pipeline_demo
+          notebook_task:
+            notebook_path: /Workspace/Users/pkcloudacademy@gmail.com/DQ_Check
+            source: WORKSPACE
+      performance_target: PERFORMANCE_OPTIMIZED

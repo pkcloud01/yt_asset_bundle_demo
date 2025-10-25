@@ -1,0 +1,18 @@
+resources:
+  pipelines:
+    dlt_pipeline_demo:
+      name: dlt_pipeline_demo  
+      schema: coffee_demo
+      continuous: false
+      development: false
+      photon: true
+      channel: CURRENT
+      catalog: retail
+      serverless: true
+
+      libraries:
+        - file:
+            path: ../src/dlt_pipeline_demo.py
+
+      configuration:
+        bundle.sourcePath: ${workspace.file_path}/src
