@@ -30,7 +30,14 @@ jobs:
       - name: Install CLI
         run: |
            curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
-
+      - name: Authenticate Databricks
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+        run: |
+          mkdir -p ~/.databricks
+          databricks auth profiles set --profile ci --host "$DATABRICKS_HOST" --token "$DATABRICKS_TOKEN"
+          databricks auth switch --profile ci
       - name: Validate Asset Bundle on DEV
         run: databricks bundle validate -t dev
         working-directory: yt_asset_bundle_demo_project
