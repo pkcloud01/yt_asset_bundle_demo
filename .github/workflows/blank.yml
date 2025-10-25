@@ -30,12 +30,13 @@ jobs:
       - name: Install CLI
         run: |
            curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
-      - name: Authenticate Databricks
+
+      - name: Authenticate Databricks (modern auth)
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
         run: |
-          databricks auth login --type pat \
+          databricks auth login \
             --host "$DATABRICKS_HOST" \
             --token "$DATABRICKS_TOKEN" \
             --profile ci
