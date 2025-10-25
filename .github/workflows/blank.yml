@@ -33,6 +33,7 @@ jobs:
 
       - name: Validate Asset Bundle on DEV
         run: databricks bundle validate -t dev
+        working-directory: yt_asset_bundle_demo_project
 
       - name: Deploy Asset Bundle on DEV
         run: databricks bundle deploy -t dev
