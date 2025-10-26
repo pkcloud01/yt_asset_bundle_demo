@@ -46,4 +46,5 @@ jobs:
         run: |
           cd yt_asset_bundle_demo_project
           databricks bundle validate -t dev --profile DEV_PROFILE
+          databricks bundle deploy -t dev --profile DEV_PROFILE
 
