@@ -24,13 +24,28 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
       - uses: databricks/setup-cli@main
-      - run: |
-          cd yt_asset_bundle_demo_project
-          databricks bundle deploy -t dev
+      # - run: |
+      #     cd yt_asset_bundle_demo_project
+      #     databricks bundle deploy -t dev
+      #   env:
+      #     DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+      #     DATABRICKS_BUILD_ENV: dev
+
+      - name: Configure Databricks profile
         env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
-          DATABRICKS_BUILD_ENV: dev
-        
+        run: |
+          echo "[DEV_PROFILE]" > ~/.databrickscfg
+          echo "host = $DATABRICKS_HOST" >> ~/.databrickscfg
+          echo "token = $DATABRICKS_TOKEN" >> ~/.databrickscfg
+          chmod 600 ~/.databrickscfg
+          echo "✅ Databricks profile created"
+
+      - name: Deploy Asset Bundle
+        run: |
+          cd yt_asset_bundle_demo_project
+          databricks bundle validate -t dev --profile DEV_PROFILE
 
       # # Runs a single command using the runners shell
       # - name: Run a one-line script
