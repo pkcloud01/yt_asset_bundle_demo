@@ -23,33 +23,39 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
-
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Install Databricks CLI (latest binary)
-        run: |
-          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | bash
-          databricks version
-
-      - name: Authenticate Databricks
+      - uses: databricks/setup-cli@main
+      - run: databricks bundle deploy
         env:
-          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
-        run: |
-          databricks auth profiles set --profile ci --host "$DATABRICKS_HOST" --token "$DATABRICKS_TOKEN"
-          databricks auth switch --profile ci
-          databricks auth whoami
+          DATABRICKS_BUILD_ENV: dev
+        
 
-      - name: Validate and Deploy Bundle
-        run: |
-          databricks bundle validate -t dev --profile ci
-          databricks bundle deploy -t dev --profile ci
+      # # Runs a single command using the runners shell
+      # - name: Run a one-line script
+      #   run: echo Hello, world!
+      # - name: Set up Python
+      #   uses: actions/setup-python@v5
+      #   with:
+      #     python-version: "3.11"
+
+      # - name: Install Databricks CLI (latest binary)
+      #   run: |
+      #     curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | bash
+      #     databricks version
+
+      # - name: Authenticate Databricks
+      #   env:
+      #     DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+      #     DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+      #   run: |
+      #     databricks auth profiles set --profile ci --host "$DATABRICKS_HOST" --token "$DATABRICKS_TOKEN"
+      #     databricks auth switch --profile ci
+      #     databricks auth whoami
+
+      # - name: Validate and Deploy Bundle
+      #   run: |
+      #     databricks bundle validate -t dev --profile ci
+      #     databricks bundle deploy -t dev --profile ci
           
       # - run: pip install flake8
       # - run: flake8 --max-line-length=100 yt_asset_bundle_demo_project/src
@@ -62,13 +68,13 @@ jobs:
       #     databricks auth switch --profile ci
       #     databricks auth whoami
 
-      - name: Validate and Deploy Bundle
-        run: |
-          databricks bundle validate -t dev --profile ci
-          databricks bundle deploy -t dev --profile ci
+      # - name: Validate and Deploy Bundle
+      #   run: |
+      #     databricks bundle validate -t dev --profile ci
+      #     databricks bundle deploy -t dev --profile ci
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+      # # Runs a set of commands using the runners shell
+      # - name: Run a multi-line script
+      #   run: |
+      #     echo Add other actions to build,
+      #     echo test, and deploy your project.
